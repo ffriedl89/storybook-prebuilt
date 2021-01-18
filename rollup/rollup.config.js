@@ -18,15 +18,14 @@ export default {
     'react-dom': './src/react-dom.js',
 
     manager: './src/manager.js',
-    'web-components': './src/web-components.js',
     addons: './src/addons.js',
     api: './src/api.js',
     'core-events': './src/core-events.js',
-    theming: './src/theming.js',
-    'theming/create': './src/theming/create.js',
+    // theming: './src/theming.js',
+    // 'theming/create': './src/theming/create.js',
 
-    'addon-actions': './src/addon-actions.js',
-    'addon-actions/register': './src/addon-actions/register.js',
+    // 'addon-actions': './src/addon-actions.js',
+    // 'addon-actions/register': './src/addon-actions/register.js',
 
     'addon-knobs': './src/addon-knobs.js',
     'addon-knobs/register': './src/addon-knobs/register.js',
@@ -36,15 +35,6 @@ export default {
 
     'addon-docs/register': './src/addon-docs/register.js',
     'addon-docs/blocks': './src/addon-docs/blocks.js',
-
-    'addon-links': './src/addon-links.js',
-    'addon-links/register': './src/addon-links/register.js',
-
-    // only register
-    'addon-backgrounds/register': './src/addon-backgrounds/register.js',
-    'addon-viewport/register': './src/addon-viewport/register.js',
-
-    'addon-web-components-knobs': 'storybook-addon-web-components-knobs',
   },
   output: {
     dir: '.',
@@ -52,9 +42,6 @@ export default {
     sourcemap: true,
     chunkFileNames: 'dist/storybook-prebuilt-[hash].js',
   },
-
-  // make sure lit-html is imported at runtime and not bundled
-  external: ['lit-html'],
 
   plugins: [
     // rollup-plugin-node-builtins accesses process from global.process, which doesn't exist
@@ -64,19 +51,6 @@ export default {
         'global.process': 'process',
       },
     }),
-
-    // storybook addon actions has circular dependencies, which break when converted to esm
-    // possibly obsolete when https://github.com/rollup/rollup/pull/3295 is applied to commonjs
-    {
-      transform(code, id) {
-        if (
-          id === require.resolve('@storybook/addon-actions/dist/containers/ActionLogger/index.js')
-        ) {
-          return code.replace('var _ = require("../..");', 'var _ = require("../../constants");');
-        }
-        return null;
-      },
-    },
 
     // OPTIMIZATION: filter out core-js polyfills to reduce bundle size
     filterModules(['node_modules/core-js']),
@@ -96,21 +70,6 @@ export default {
           all[key] = [...Object.keys(require(key))];
           return all;
         }, {}),
-
-        // manual named export
-        '@storybook/web-components': [
-          'setAddon',
-          'addDecorator',
-          'addParameters',
-          'configure',
-          'getStorybook',
-          'forceReRender',
-          'raw',
-          'getCustomElements',
-          'setCustomElements',
-          'isValidComponent',
-          'isValidMetaData',
-        ],
 
         '@storybook/addons': [
           'makeDecorator',
@@ -166,36 +125,25 @@ export default {
           'HeadersMdx',
         ],
 
-        '@storybook/theming': [
-          'themes',
-          'createGlobal',
-          'createReset',
-          'color',
-          'background',
-          'typography',
-          'create',
-          'convert',
-          'ensure',
-          'lighten',
-          'darken',
-          'ThemeProvider',
-          'withTheme',
-        ],
+        // '@storybook/theming': [
+        //   'themes',
+        //   'createGlobal',
+        //   'createReset',
+        //   'color',
+        //   'background',
+        //   'typography',
+        //   'create',
+        //   'convert',
+        //   'ensure',
+        //   'lighten',
+        //   'darken',
+        //   'ThemeProvider',
+        //   'withTheme',
+        // ],
 
-        '@storybook/theming/create': ['create'],
+        // '@storybook/theming/create': ['create'],
 
         '@storybook/addon-knobs': ['boolean'],
-
-        '@storybook/addon-actions': [
-          'actions',
-          'action',
-          'decorate',
-          'decorateAction',
-          'configureActions',
-          'withActions',
-        ],
-
-        '@storybook/addon-links': ['linkTo', 'hrefTo', 'withLinks'],
       },
     }),
 
@@ -237,18 +185,6 @@ export default {
       'react-syntax-highlighter/dist/esm/index.js':
         "export { default as PrismLight } from './prism-light'",
     }),
-
-    // lit-html is imported by @storybook/web-components as a default import,
-    // which is incorrect
-    {
-      name: 'lit-html-renamer',
-      renderChunk(code) {
-        return {
-          code: code.replace('import _litHtml', 'import * as _litHtml'),
-          map: null,
-        };
-      },
-    },
 
     // the majority of the storybook ecosystem is es5, but some are not. we compile all to es5, so that we can skip
     // compiling it by users. when storybook dependencies start becoming non-es5, we can consider making a separate
