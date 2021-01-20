@@ -19,13 +19,9 @@ export default {
 
     manager: './src/manager.js',
     addons: './src/addons.js',
+    'storybook-react': './src/storybook-react.js',
     api: './src/api.js',
     'core-events': './src/core-events.js',
-    // theming: './src/theming.js',
-    // 'theming/create': './src/theming/create.js',
-
-    // 'addon-actions': './src/addon-actions.js',
-    // 'addon-actions/register': './src/addon-actions/register.js',
 
     'addon-knobs': './src/addon-knobs.js',
     'addon-knobs/register': './src/addon-knobs/register.js',
@@ -70,6 +66,10 @@ export default {
           all[key] = [...Object.keys(require(key))];
           return all;
         }, {}),
+
+        '@storybook/react': [
+          'configure'
+        ],
 
         '@storybook/addons': [
           'makeDecorator',
@@ -125,23 +125,6 @@ export default {
           'HeadersMdx',
         ],
 
-        // '@storybook/theming': [
-        //   'themes',
-        //   'createGlobal',
-        //   'createReset',
-        //   'color',
-        //   'background',
-        //   'typography',
-        //   'create',
-        //   'convert',
-        //   'ensure',
-        //   'lighten',
-        //   'darken',
-        //   'ThemeProvider',
-        //   'withTheme',
-        // ],
-
-        // '@storybook/theming/create': ['create'],
 
         '@storybook/addon-knobs': ['boolean'],
       },

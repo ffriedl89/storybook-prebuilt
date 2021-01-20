@@ -1,5 +1,5 @@
 import '@storybook/addon-docs/dist/frameworks/common/config.js';
-import '@storybook/addon-docs/dist/frameworks/web-components/config.js';
+import '@storybook/addon-docs/dist/frameworks/react/config.js';
 
 export {
   ColorPalette,
